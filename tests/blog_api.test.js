@@ -34,8 +34,25 @@ test('unique identifier property is named id, not _id', async () => {
     const res = await api.get("/api/blogs")
 
     // it is enough to check the first blog since they all share the same schema
-    assert.equal(Object.hasOwn(res.body[0], 'id'), true)
-    assert.equal(Object.hasOwn(res.body[0], '_id'), false)
+    assert(Object.hasOwn(res.body[0], 'id'))
+    assert(!Object.hasOwn(res.body[0], '_id'))
+})
+
+test('post request to /api/blogs creates a new post', async () => {
+    const testBlog = { title: "A test in a test", author: "The tester", url: "no url", likes: 0 };
+
+    await api.post("/api/blogs").send(testBlog).expect(201).expect('Content-Type', /application\/json/)
+
+    const res = await api.get("/api/blogs")
+
+    const returnedBlog = res.body[2]
+
+    assert.strictEqual(res.body.length, initialBlogs.length + 1)
+
+    assert.strictEqual(returnedBlog.title, testBlog.title)
+    assert.strictEqual(returnedBlog.author, testBlog.author)
+    assert.strictEqual(returnedBlog.url, testBlog.url)
+    assert.strictEqual(returnedBlog.likes, testBlog.likes)
 })
 
 after(async () => {
