@@ -18,22 +18,25 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
   let body = request.body
- // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)  
- // if (!decodedToken.id) 
- // {    
- //   return response.status(401).json({ error: 'token invalid' })  
- // }  
- // const user = await User.findById(decodedToken.id)
+  if (body.url == undefined || body.title == undefined)
+    return response.status(400).json("Bad Request");
 
- const user = await User.findOne({})
+  const req_tok = getTokenFrom(request)
+
+  if(req_tok === null)
+    return response.status(400).json("jwt must be provided...")
+
+  const decodedToken = jwt.verify(req_tok, process.env.SECRET)  
+  if (!decodedToken.id) 
+  {    
+    return response.status(401).json({ error: 'token invalid' })  
+  }  
+  const user = await User.findById(decodedToken.id)
+
 
   body.user = user._id.toJSON()
 
   const blog = new Blog(body);
-
-  if (body.url == undefined || body.title == undefined)
-    return response.status(400).json("Bad Request");
-
   const saved_blog = await blog.save()
 
   user.blogs = user.blogs.concat(saved_blog._id)
