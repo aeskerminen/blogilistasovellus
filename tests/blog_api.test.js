@@ -75,6 +75,22 @@ test('test if missing title or url generates errror 400 Bad request', async () =
     const res2 = await api.post("/api/blogs").send(noTitle).expect(400)
 })
 
+test('test if deleting a blog works', async () => {
+    let res = await api.get("/api/blogs")
+    const returnedBlog = res.body[0]
+    const id = returnedBlog.id
+
+    await api.delete(`/api/blogs/${id}/delete`).expect(204)
+
+    res = await api.get("/api/blogs")
+
+    assert.strictEqual(res.body.length, 1)
+})
+
+test('test if deleting a non-existent blog returns error', async () => {
+    await api.delete(`/api/blogs/3219sajjs/delete`).expect(400)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
