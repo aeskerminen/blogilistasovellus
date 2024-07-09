@@ -1,9 +1,8 @@
-POST http://localhost:3003/api/blogs HTTP/1.1
+POST http://localhost:3003/api/users HTTP/1.1
 content-type: application/json
 
 {
-   "title": "THIS IS A TEST",
-   "author": "THIS IS A TEST",
-   "url": "THIS IS A TEST",
-   "likes": "2"
+   "username": "testi",
+   "name": "Artturi Kerminen",
+   "password": "Salainen"
 }
