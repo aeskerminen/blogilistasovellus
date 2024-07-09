@@ -24,10 +24,29 @@ blogsRouter.delete("/:id/delete", async (request, response) => {
   } catch(e) {
     return response.status(400).json(e)
   }
-  if(blog === undefined)
-    return response.status(404).json("Not found")
 
   return response.status(204).json()
+})
+
+blogsRouter.put("/:id/update", async (request, response) => {
+  const id = request.params.id;
+  const body = request.body
+
+  const blog = {
+    likes: body.likes
+  }
+
+  if(isNaN(body.likes))
+    return response.status(400).json()
+
+  try {
+    await Blog.findByIdAndUpdate(id, blog)
+  } catch(e) {
+    return response.status(400).json()
+  }
+
+  return response.status(200).json()
+
 })
 
 module.exports = blogsRouter

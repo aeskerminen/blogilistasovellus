@@ -91,6 +91,40 @@ test('test if deleting a non-existent blog returns error', async () => {
     await api.delete(`/api/blogs/3219sajjs/delete`).expect(400)
 })
 
+test('test if updating a blog post works', async () => {
+    const testBlog = { title: "A test in a test", author: "The tester", url: "no url", likes: 0};
+
+    await api.post("/api/blogs").send(testBlog).expect(201).expect('Content-Type', /application\/json/)
+
+    let res = await api.get("/api/blogs")
+
+    const returnedBlog = res.body[2]
+    const id = returnedBlog.id
+
+    await api.put(`/api/blogs/${id}/update`).send({likes: 30}).expect(200)
+
+    res = await api.get("/api/blogs")
+
+    assert.strictEqual(res.body[2].likes, 30)
+})
+
+test('test if passing wrong data type returns error', async () => {
+    const testBlog = { title: "A test in a test", author: "The tester", url: "no url", likes: 0};
+
+    await api.post("/api/blogs").send(testBlog).expect(201).expect('Content-Type', /application\/json/)
+
+    let res = await api.get("/api/blogs")
+
+    const returnedBlog = res.body[2]
+    const id = returnedBlog.id
+
+    await api.put(`/api/blogs/${id}/update`).send({likes: "test"}).expect(400)
+})
+
+test('test if updating a non-existent blog returns error', async () => {
+    await api.put(`/api/blogs/3219sajjs/update`).expect(400)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
