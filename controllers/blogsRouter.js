@@ -12,20 +12,22 @@ const getTokenFrom = request => {
 }
 
 blogsRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({}).populate('user')
+  const blogs = await Blog.find({}).populate('user', 'username name id')
   return response.json(blogs);
 });
 
 blogsRouter.post("/", async (request, response) => {
   let body = request.body
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)  
-  if (!decodedToken.id) 
-  {    
-    return response.status(401).json({ error: 'token invalid' })  
-  }  
-  const user = await User.findById(decodedToken.id)
+ // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)  
+ // if (!decodedToken.id) 
+ // {    
+ //   return response.status(401).json({ error: 'token invalid' })  
+ // }  
+ // const user = await User.findById(decodedToken.id)
 
-  body.user = user.id
+ const user = await User.findOne({})
+
+  body.user = user._id.toJSON()
 
   const blog = new Blog(body);
 
@@ -37,7 +39,7 @@ blogsRouter.post("/", async (request, response) => {
   user.blogs = user.blogs.concat(saved_blog._id)
   await user.save()
 
-  return response.status(201).json(res);
+  return response.status(201).json();
 });
 
 blogsRouter.delete("/:id/delete", async (request, response) => {
