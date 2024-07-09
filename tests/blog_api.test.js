@@ -67,6 +67,14 @@ test('test if likes property behaves correctly', async () => {
     assert.strictEqual(returnedBlog.likes, 0)
 })
 
+test('test if missing title or url generates errror 400 Bad request', async () => {
+    const noUrl = { title: "A test in a test", author: "The tester", likes: 0};
+    const noTitle = { author: "The tester", url: "no url", likes: 0};
+
+    const res1 = await api.post("/api/blogs").send(noUrl).expect(400)
+    const res2 = await api.post("/api/blogs").send(noTitle).expect(400)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
