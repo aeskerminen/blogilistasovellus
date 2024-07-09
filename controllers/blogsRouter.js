@@ -37,7 +37,16 @@ blogsRouter.post("/", async (request, response) => {
 
 blogsRouter.delete("/:id/delete", async (request, response) => {
   const id = request.params.id
-  let blog;
+  let blog = await Blog.findById(id);
+
+  if (request.token === null)
+    return response.status(400).json("jwt must be provided...")
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if(decodedToken.id !== blog.user._id.toJSON())
+    return response.status(405).json("Cannot deleted others' posts.")
+
   try {
     blog = await Blog.findByIdAndDelete(id)
   } catch (e) {
