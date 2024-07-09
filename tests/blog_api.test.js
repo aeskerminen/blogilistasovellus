@@ -55,6 +55,18 @@ test('post request to /api/blogs creates a new post', async () => {
     assert.strictEqual(returnedBlog.likes, testBlog.likes)
 })
 
+test('test if likes property behaves correctly', async () => {
+    const testBlog = { title: "A test in a test", author: "The tester", url: "no url"};
+
+    await api.post("/api/blogs").send(testBlog).expect(201).expect('Content-Type', /application\/json/)
+
+    const res = await api.get("/api/blogs")
+
+    const returnedBlog = res.body[2]
+
+    assert.strictEqual(returnedBlog.likes, 0)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
