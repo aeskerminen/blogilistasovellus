@@ -10,13 +10,14 @@ const errorHandler = require('./middleware/errorHandler')
 mongoose.set('strictQuery', false)
 mongoose.connect(config.mongoUrl)
 
+
 app.use(cors())
 app.use(express.json())
 
-app.use(errorHandler)
-
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+
+app.use(errorHandler)
 
 
 module.exports = app
