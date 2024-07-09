@@ -30,6 +30,13 @@ test('blogs are returned as json and there is the correct amount of them', async
     assert.strictEqual(res.body.length, initialBlogs.length)
 })
 
+test('unique identifier property is named id, not _id', async () => {
+    const res = await api.get("/api/blogs")
+
+    // it is enough to check the first blog since they all share the same schema
+    assert.equal(Object.hasOwn(res.body[0], 'id'), true)
+    assert.equal(Object.hasOwn(res.body[0], '_id'), false)
+})
 
 after(async () => {
     await mongoose.connection.close()
