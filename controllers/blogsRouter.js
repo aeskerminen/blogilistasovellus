@@ -32,12 +32,18 @@ blogsRouter.post("/", async (request, response) => {
   user.blogs = user.blogs.concat(saved_blog._id)
   await user.save()
 
-  return response.status(201).json(blog);
+  return response.status(201).json(saved_blog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
   const id = request.params.id
-  let blog = await Blog.findById(id);
+  let blog;
+  
+  try {
+    blog = await Blog.findById(id);
+  } catch(e) {
+    return response.status(400).json("The id was malformed...")
+  }
   
   if(blog === null)
     return response.status(404).json("Blog was not found...")
@@ -60,7 +66,13 @@ blogsRouter.delete("/:id", async (request, response) => {
 blogsRouter.put("/:id", async (request, response) => {
   const id = request.params.id;
   const body = request.body
-  let blog = await Blog.findById(id);
+  let blog;
+  
+  try {
+    blog = await Blog.findById(id);
+  } catch(e) {
+    return response.status(400).json("The id was malformed...")
+  }
   
   if(blog === null)
     return response.status(404).json("Blog was not found...")

@@ -3,7 +3,7 @@ content-type: application/json
 Authorization: Bearer 
 
 {
-   "username": "test2",
+   "username": "test3",
    "name": "Artturi Kerminen",
-   "password": "test"
+   "password": "test3"
 }
