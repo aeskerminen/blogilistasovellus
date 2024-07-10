@@ -112,7 +112,7 @@ test('test if deleting a blog works', async () => {
     let res = await api.get("/api/blogs")
     const id = res.body[res.body.length - 1].id
 
-    await api.delete(`/api/blogs/${id}/delete`).set('Authorization', `Bearer ${auth_token}`).expect(204)
+    await api.delete(`/api/blogs/${id}`).set('Authorization', `Bearer ${auth_token}`).expect(204)
 
     res = await api.get("/api/blogs")
 
@@ -132,7 +132,7 @@ test('test if deleting a non-existent blog returns error', async () => {
 
     await Blog.findByIdAndDelete(id);
    
-    await api.delete(`/api/blogs/${id}/delete`).set('Authorization', `Bearer ${auth_token}`).expect(404)
+    await api.delete(`/api/blogs/${id}`).set('Authorization', `Bearer ${auth_token}`).expect(404)
 })
 
 test('test if updating a blog post works', async () => {
@@ -148,7 +148,7 @@ test('test if updating a blog post works', async () => {
     const returnedBlog = res.body[2]
     const id = returnedBlog.id
 
-    await api.put(`/api/blogs/${id}/update`).set('Authorization', `Bearer ${auth_token}`).send({likes: 30, author: 'testing bling'}).expect(200)
+    await api.put(`/api/blogs/${id}`).set('Authorization', `Bearer ${auth_token}`).send({likes: 30, author: 'testing bling'}).expect(200)
 
     res = await api.get("/api/blogs")
 
@@ -171,7 +171,7 @@ test('test if passing wrong data type returns error', async () => {
     const returnedBlog = res.body[2]
     const id = returnedBlog.id
 
-    await api.put(`/api/blogs/${id}/update`).set('Authorization', `Bearer ${auth_token}`).send({likes: "test"}).expect(400)
+    await api.put(`/api/blogs/${id}`).set('Authorization', `Bearer ${auth_token}`).send({likes: "test"}).expect(400)
 })
 
 test('test if updating a non-existent blog returns error', async () => {
@@ -187,7 +187,7 @@ test('test if updating a non-existent blog returns error', async () => {
 
     await Blog.findByIdAndDelete(id);
 
-    await api.put(`/api/blogs/${id}/update`).set('Authorization', `Bearer ${auth_token}`).expect(404)
+    await api.put(`/api/blogs/${id}`).set('Authorization', `Bearer ${auth_token}`).expect(404)
 })
 
 after(async () => {

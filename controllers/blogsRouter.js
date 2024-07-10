@@ -35,7 +35,7 @@ blogsRouter.post("/", async (request, response) => {
   return response.status(201).json(blog);
 });
 
-blogsRouter.delete("/:id/delete", async (request, response) => {
+blogsRouter.delete("/:id", async (request, response) => {
   const id = request.params.id
   let blog = await Blog.findById(id);
   
@@ -57,7 +57,7 @@ blogsRouter.delete("/:id/delete", async (request, response) => {
   return response.status(204).json()
 })
 
-blogsRouter.put("/:id/update", async (request, response) => {
+blogsRouter.put("/:id", async (request, response) => {
   const id = request.params.id;
   const body = request.body
   let blog = await Blog.findById(id);
