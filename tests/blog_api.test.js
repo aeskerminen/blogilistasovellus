@@ -152,6 +152,8 @@ test('test if updating a blog post works', async () => {
 
     res = await api.get("/api/blogs")
 
+    console.log(res.body[2])
+
     assert.strictEqual(res.body[2].likes, 30)
     assert.strictEqual(res.body[2].author, 'testing bling')
 })

@@ -65,8 +65,6 @@ blogsRouter.put("/:id/update", async (request, response) => {
   if(blog === null)
     return response.status(404).json("Blog was not found...")
 
-  
-
   if (isNaN(body.likes))
     return response.status(400).json()
 
