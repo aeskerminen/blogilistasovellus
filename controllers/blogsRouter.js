@@ -65,15 +65,13 @@ blogsRouter.put("/:id/update", async (request, response) => {
   if(blog === null)
     return response.status(404).json("Blog was not found...")
 
-  const update = {
-    likes: body.likes
-  }
+  
 
   if (isNaN(body.likes))
     return response.status(400).json()
 
   try {
-    await Blog.findByIdAndUpdate(id, update)
+    await Blog.findByIdAndUpdate(id, body)
   } catch (e) {
     return response.status(400).json()
   }
