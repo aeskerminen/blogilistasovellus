@@ -168,7 +168,7 @@ test('test if passing wrong data type returns error', async () => {
     const returnedBlog = res.body[2]
     const id = returnedBlog.id
 
-    await api.put(`/api/blogs/${id}/update`).send({likes: "test"}).expect(400)
+    await api.put(`/api/blogs/${id}/update`).set('Authorization', `Bearer ${auth_token}`).send({likes: "test"}).expect(400)
 })
 
 test('test if updating a non-existent blog returns error', async () => {
