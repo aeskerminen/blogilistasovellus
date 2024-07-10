@@ -148,11 +148,12 @@ test('test if updating a blog post works', async () => {
     const returnedBlog = res.body[2]
     const id = returnedBlog.id
 
-    await api.put(`/api/blogs/${id}/update`).set('Authorization', `Bearer ${auth_token}`).send({likes: 30}).expect(200)
+    await api.put(`/api/blogs/${id}/update`).set('Authorization', `Bearer ${auth_token}`).send({likes: 30, author: 'testing bling'}).expect(200)
 
     res = await api.get("/api/blogs")
 
     assert.strictEqual(res.body[2].likes, 30)
+    assert.strictEqual(res.body[2].author, 'testing bling')
 })
 
 test('test if passing wrong data type returns error', async () => {
