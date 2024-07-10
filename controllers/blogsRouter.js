@@ -14,8 +14,8 @@ blogsRouter.post("/", async (request, response) => {
   if (body.url == undefined || body.title == undefined)
     return response.status(400).json("Bad Request");
 
-  if (request.token === null)
-    return response.status(400).json("jwt must be provided...")
+  if (request.token === null || request.user === undefined)
+    return response.status(401).json("jwt must be provided...")
 
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!decodedToken.id) {
@@ -38,11 +38,12 @@ blogsRouter.post("/", async (request, response) => {
 blogsRouter.delete("/:id/delete", async (request, response) => {
   const id = request.params.id
   let blog = await Blog.findById(id);
-
-  if (request.token === null)
-    return response.status(400).json("jwt must be provided...")
-
   
+  if(blog === null)
+    return response.status(404).json("Blog was not found...")
+
+  if(request.token === null || request.user == undefined)
+    return response.status(401).json("jwt must be provided...")
 
   if(request.user.id !== blog.user._id.toJSON())
     return response.status(405).json("Cannot deleted others' posts.")
@@ -59,8 +60,19 @@ blogsRouter.delete("/:id/delete", async (request, response) => {
 blogsRouter.put("/:id/update", async (request, response) => {
   const id = request.params.id;
   const body = request.body
+  let blog = await Blog.findById(id);
+  
+  if(blog === null)
+    return response.status(404).json("Blog was not found...")
 
-  const blog = {
+  if(request.token === null || request.user === undefined)
+    return response.status(401).json("jwt must be provided...")
+
+  if(request.user.id !== blog.user._id.toJSON())
+    return response.status(405).json("Cannot deleted others' posts.")
+
+
+  const update = {
     likes: body.likes
   }
 
@@ -68,7 +80,7 @@ blogsRouter.put("/:id/update", async (request, response) => {
     return response.status(400).json()
 
   try {
-    await Blog.findByIdAndUpdate(id, blog)
+    await Blog.findByIdAndUpdate(id, update)
   } catch (e) {
     return response.status(400).json()
   }

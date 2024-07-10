@@ -5,7 +5,6 @@ const tokenExtractor = (request, response, next) => {
         token = authorization.replace('Bearer ', '')
     }
 
-
     request.token = token
 
     next()
