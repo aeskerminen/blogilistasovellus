@@ -65,13 +65,6 @@ blogsRouter.put("/:id/update", async (request, response) => {
   if(blog === null)
     return response.status(404).json("Blog was not found...")
 
-  if(request.token === null || request.user === undefined)
-    return response.status(401).json("jwt must be provided...")
-
-  if(request.user.id !== blog.user._id.toJSON())
-    return response.status(405).json("Cannot deleted others' posts.")
-
-
   const update = {
     likes: body.likes
   }
